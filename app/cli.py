@@ -76,33 +76,33 @@ def _cmd_import(args):
         print("  Warnings: none")
 
 
-def _cmd_demo_load():
+def _cmd_demo_load(db_path=None):
     from app.db import reset_db
     from app.importer import import_batch
     from app.router import route_all
 
     base = Path(__file__).parent.parent / "data"
-    reset_db()
+    reset_db(db_path)
     print("DB reset.")
 
     print("\n--- Importing 01_initial.json ---")
-    log1 = import_batch(str(base / "01_initial.json"))
+    log1 = import_batch(str(base / "01_initial.json"), db_path=db_path)
     _print_log(log1)
 
     print("\n--- Importing 02_update.json ---")
-    log2 = import_batch(str(base / "02_update.json"))
+    log2 = import_batch(str(base / "02_update.json"), db_path=db_path)
     _print_log(log2)
 
     print("\n--- Running router on all records ---")
-    n = route_all()
+    n = route_all(db_path=db_path)
     print(f"  Routed {n} records.")
 
     print("\n--- Loading pre-generated analyses ---")
-    _load_analyses()
+    _load_analyses(db_path=db_path)
 
     print("\n--- Summary ---")
     from app.db import get_conn, count_records, count_usable_transcripts
-    with get_conn() as conn:
+    with get_conn(db_path) as conn:
         total = count_records(conn)
         usable = count_usable_transcripts(conn)
     print(f"  Total records:           {total}")
@@ -111,7 +111,7 @@ def _cmd_demo_load():
     print("\nDemo load complete. Run: python -m app serve")
 
 
-def _load_analyses():
+def _load_analyses(db_path=None):
     """Load pre-generated analysis JSON files into DB if they exist."""
     import datetime, pytz
     from app.db import get_conn
@@ -125,7 +125,7 @@ def _load_analyses():
                     entries = json.load(f)
                 if not isinstance(entries, list):
                     entries = [entries]
-                with get_conn() as conn:
+                with get_conn(db_path) as conn:
                     for entry in entries:
                         st = entry.get("source_type")
                         sid = entry.get("source_id")

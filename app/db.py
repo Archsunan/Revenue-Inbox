@@ -7,22 +7,96 @@ record_ref is stored for display ONLY. Never used as a lookup key.
 import sqlite3
 import json
 import os
+import shutil
+import tempfile
 from pathlib import Path
 from contextlib import contextmanager
 
-DB_PATH = Path(__file__).parent.parent / "data" / "app.db"
+DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "app.db"
+_RESOLVED_DB_PATH = None
 
 
 def get_db_path() -> Path:
-    return DB_PATH
+    global _RESOLVED_DB_PATH
+    if _RESOLVED_DB_PATH is not None:
+        return _RESOLVED_DB_PATH
+
+    env_path = os.environ.get("DATABASE_PATH") or os.environ.get("DB_PATH")
+    if env_path:
+        p = Path(env_path).resolve()
+        try:
+            p.parent.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass
+        _RESOLVED_DB_PATH = p
+        return _RESOLVED_DB_PATH
+
+    p = DEFAULT_DB_PATH
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        # Test directory write permission
+        test_file = p.parent / ".perm_check"
+        test_file.touch()
+        test_file.unlink()
+        _RESOLVED_DB_PATH = p
+        return _RESOLVED_DB_PATH
+    except Exception:
+        # Fallback for serverless / read-only deployment filesystems (Vercel, AWS Lambda, Docker non-root)
+        tmp_dir = Path(tempfile.gettempdir()) / "revenue_inbox_data"
+        try:
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            tmp_db = tmp_dir / "app.db"
+            if not tmp_db.exists() and p.exists():
+                try:
+                    shutil.copy2(p, tmp_db)
+                except Exception:
+                    pass
+            _RESOLVED_DB_PATH = tmp_db
+            return _RESOLVED_DB_PATH
+        except Exception:
+            _RESOLVED_DB_PATH = p
+            return _RESOLVED_DB_PATH
+
+
+DB_PATH = DEFAULT_DB_PATH
 
 
 def _connect(path: Path = None) -> sqlite3.Connection:
-    p = path or DB_PATH
-    conn = sqlite3.connect(str(p), detect_types=sqlite3.PARSE_DECLTYPES)
+    p = path or get_db_path()
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+
+    try:
+        conn = sqlite3.connect(str(p), detect_types=sqlite3.PARSE_DECLTYPES)
+    except sqlite3.OperationalError:
+        # In case the target file cannot be opened (read-only or permission restriction),
+        # copy to a writable temp location and connect there
+        tmp_dir = Path(tempfile.gettempdir()) / "revenue_inbox_data"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        fallback = tmp_dir / "app.db"
+        if p != fallback:
+            if p.exists():
+                try:
+                    shutil.copy2(p, fallback)
+                except Exception:
+                    pass
+            p = fallback
+        conn = sqlite3.connect(str(p), detect_types=sqlite3.PARSE_DECLTYPES)
+
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+    except sqlite3.OperationalError:
+        try:
+            conn.execute("PRAGMA journal_mode=DELETE")
+        except sqlite3.OperationalError:
+            pass
+    try:
+        conn.execute("PRAGMA foreign_keys=ON")
+    except Exception:
+        pass
     return conn
 
 
@@ -142,10 +216,26 @@ def init_db(path: Path = None) -> None:
 
 def reset_db(path: Path = None) -> None:
     """Drop all data (keep schema). Idempotent."""
-    p = path or DB_PATH
+    p = path or get_db_path()
     if p.exists():
         p.unlink()
     init_db(p)
+
+
+def ensure_db_initialized(path: Path = None) -> None:
+    """Ensure database schema and initial data exist (self-healing for cloud deployments)."""
+    p = path or get_db_path()
+    init_db(p)
+    try:
+        with get_conn(p) as conn:
+            row = conn.execute("SELECT count(*) FROM source_record").fetchone()
+            count = row[0] if row else 0
+    except Exception:
+        count = 0
+
+    if count == 0:
+        from app.cli import _cmd_demo_load
+        _cmd_demo_load(p)
 
 
 def get_all_records(conn, source_type=None, rep_email=None, organizer_email=None,

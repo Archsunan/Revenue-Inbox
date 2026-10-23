@@ -19,24 +19,48 @@ async def records_view(
     review_state: str = Query(None),
     transcript_status: str = Query(None),
 ):
-    with get_conn() as conn:
-        rows = get_all_records(
-            conn,
-            source_type=source_type,
-            rep_email=rep_email,
-            route=route,
-            review_state_filter=review_state,
-            transcript_status=transcript_status,
-        )
-        all_ra = {
-            (r["source_type"], r["source_id"]): r
-            for r in conn.execute("SELECT * FROM route_assignment").fetchall()
-        }
-        dq_flags_raw = conn.execute("SELECT * FROM data_quality_flag").fetchall()
-        dq_map = {}
-        for f in dq_flags_raw:
-            key = (f["source_type"], f["source_id"])
-            dq_map.setdefault(key, []).append(f["flag_key"])
+    try:
+        with get_conn() as conn:
+            rows = get_all_records(
+                conn,
+                source_type=source_type,
+                rep_email=rep_email,
+                route=route,
+                review_state_filter=review_state,
+                transcript_status=transcript_status,
+            )
+            all_ra = {
+                (r["source_type"], r["source_id"]): r
+                for r in conn.execute("SELECT * FROM route_assignment").fetchall()
+            }
+            dq_flags_raw = conn.execute("SELECT * FROM data_quality_flag").fetchall()
+    except Exception:
+        try:
+            from app.db import ensure_db_initialized
+            ensure_db_initialized()
+            with get_conn() as conn:
+                rows = get_all_records(
+                    conn,
+                    source_type=source_type,
+                    rep_email=rep_email,
+                    route=route,
+                    review_state_filter=review_state,
+                    transcript_status=transcript_status,
+                )
+                all_ra = {
+                    (r["source_type"], r["source_id"]): r
+                    for r in conn.execute("SELECT * FROM route_assignment").fetchall()
+                }
+                dq_flags_raw = conn.execute("SELECT * FROM data_quality_flag").fetchall()
+        except Exception:
+            rows = []
+            all_ra = {}
+            dq_flags_raw = []
+
+    dq_map = {}
+    for f in dq_flags_raw:
+        key = (f["source_type"], f["source_id"])
+        dq_map.setdefault(key, []).append(f["flag_key"])
 
     records_out = []
     for rec in rows:

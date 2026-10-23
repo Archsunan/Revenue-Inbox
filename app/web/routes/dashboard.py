@@ -157,5 +157,11 @@ async def dashboard_view(
     try:
         data = _build_dashboard_data(source_type, rep_email, route)
     except Exception as e:
-        data = {"error": str(e)}
+        # Attempt self-healing initialization and retry
+        try:
+            from app.db import ensure_db_initialized
+            ensure_db_initialized()
+            data = _build_dashboard_data(source_type, rep_email, route)
+        except Exception as retry_err:
+            data = {"error": str(retry_err)}
     return templates.TemplateResponse("dashboard.html", {"request": request, **data})
