@@ -1,0 +1,27 @@
+{
+  "source_type": "call",
+  "source_id": "4a1de681-f884-55e8-b1ad-de22d17cd959",
+  "record_ref": "C09",
+  "route": "needs_human_decision",
+  "generated_from_revision": 1,
+  "summary": "Cold call by Meera to Vedant (>130 store chain). Vedant explained software was developed internally and referred rep to business head Mr Rishabh on professional network, but requested his own name not be mentioned.",
+  "evidence": [
+    {
+      "label": "Internal system in place",
+      "quote": "We have developed our own software internally, so at present we aren't looking for anything outside the organisation."
+    },
+    {
+      "label": "Referral to business head",
+      "quote": "If you want to speak to somebody about it, you can find our business head, Mr Rishabh, on a professional networking site."
+    },
+    {
+      "label": "Name usage constraint",
+      "quote": "No, please don't use my name."
+    }
+  ],
+  "not_established": "Whether Mr Rishabh has identified gaps in the internal software or is open to external vendors.",
+  "next_step": {
+    "action": "Conduct outreach to Mr Rishabh without referencing Vedant.",
+    "owner": null
+  }
+}

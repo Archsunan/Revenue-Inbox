@@ -1,0 +1,31 @@
+{
+  "source_type": "meeting",
+  "source_id": "b0f79b3d-37ba-52f9-b2bc-58b159dd6d91",
+  "record_ref": "M04",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Migration planning discussion with Cedarwave Distribution regarding physical cards, contactless acceptance issues, wallet payments, and department user management.",
+  "evidence": [
+    {
+      "label": "Migration agenda",
+      "turn_number": 1
+    },
+    {
+      "label": "Card acceptance difficulties",
+      "turn_number": 2
+    },
+    {
+      "label": "Digital wallet expectations",
+      "turn_number": 3
+    },
+    {
+      "label": "Department reconciliation issue",
+      "turn_number": 30
+    }
+  ],
+  "not_established": "Exact card reissue migration date or accounting software version.",
+  "next_step": {
+    "action": "Customer A to review migration requirements and follow up with team.",
+    "owner": "Customer A"
+  }
+}

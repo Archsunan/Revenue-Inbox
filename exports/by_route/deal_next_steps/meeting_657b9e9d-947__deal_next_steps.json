@@ -1,0 +1,31 @@
+{
+  "source_type": "meeting",
+  "source_id": "657b9e9d-9472-5b01-a127-a648ad7e8cf7",
+  "record_ref": "M06",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Exploratory finance discussion with Mapletrail Services branch (50 people) covering branch expenditure, card controls, security, and audit trails.",
+  "evidence": [
+    {
+      "label": "Branch operations scope",
+      "turn_number": 2
+    },
+    {
+      "label": "Confidentiality and audit concerns",
+      "turn_number": 31
+    },
+    {
+      "label": "Compliance controls explanation",
+      "turn_number": 32
+    },
+    {
+      "label": "Information request",
+      "turn_number": 33
+    }
+  ],
+  "not_established": "Head office buy-in, formal RFP issuance, or total branch budget.",
+  "next_step": {
+    "action": "Send security documentation and platform overview to Customer A.",
+    "owner": "Team member A"
+  }
+}

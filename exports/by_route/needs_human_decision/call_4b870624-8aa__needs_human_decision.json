@@ -1,0 +1,23 @@
+{
+  "source_type": "call",
+  "source_id": "4b870624-8aad-5315-a60e-0db95981cf99",
+  "record_ref": "C02",
+  "route": "needs_human_decision",
+  "generated_from_revision": 1,
+  "summary": "Call to Fernhaven Group answered by receptionist Kavya. Target contact Leela was out of office; rep transferred to voicemail.",
+  "evidence": [
+    {
+      "label": "Gatekeeper response",
+      "quote": "It looks as though she isn't in the office today. Would you like to leave a message with me, or would you prefer her voicemail?"
+    },
+    {
+      "label": "Rep routing choice",
+      "quote": "Her voicemail would be fine, thank you."
+    }
+  ],
+  "not_established": "Whether Leela listened to the voicemail or will call back. Stored 'is_conversation: true' is misleading for a gatekeeper interaction.",
+  "next_step": {
+    "action": "Log gatekeeper touchpoint and re-attempt contact next week.",
+    "owner": null
+  }
+}

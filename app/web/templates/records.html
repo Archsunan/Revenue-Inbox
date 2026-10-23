@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}Inbox — Revenue Intelligence Inbox{% endblock %}
+
+{% block content %}
+<div class="center-content">
+  <!-- Header Area -->
+  <div class="header-area">
+    <div class="greeting-text">
+      <h2>Activity Inbox</h2>
+      <p>All 44 customer interactions across telephony and video on 21 Aug 2026.</p>
+    </div>
+    <div class="header-actions">
+      <div class="date-pill">
+        <span>Showing <strong>{{ total }}</strong> records</span>
+      </div>
+      <button class="circle-icon-btn" onclick="triggerExport()" title="Export filtered records">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <form method="get" action="/records">
+    <div class="filter-bar">
+      <div class="filter-pill">
+        <select name="source_type" onchange="this.form.submit()">
+          <option value="">All source types</option>
+          <option value="call" {% if filters.source_type == 'call' %}selected{% endif %}>Calls</option>
+          <option value="meeting" {% if filters.source_type == 'meeting' %}selected{% endif %}>Meetings</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="rep_email" onchange="this.form.submit()">
+          <option value="">All call reps</option>
+          {% for email, name in call_reps.items() %}
+          <option value="{{ email }}" {% if filters.rep_email == email %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="route" onchange="this.form.submit()">
+          <option value="">All routes</option>
+          <option value="customer_follow_up" {% if filters.route == 'customer_follow_up' %}selected{% endif %}>Customer Follow-Up</option>
+          <option value="deal_next_steps" {% if filters.route == 'deal_next_steps' %}selected{% endif %}>Deal Next Steps</option>
+          <option value="sales_coaching" {% if filters.route == 'sales_coaching' %}selected{% endif %}>Sales Coaching</option>
+          <option value="support_account_admin" {% if filters.route == 'support_account_admin' %}selected{% endif %}>Support / Admin</option>
+          <option value="internal_vendor_note" {% if filters.route == 'internal_vendor_note' %}selected{% endif %}>Internal / Vendor</option>
+          <option value="needs_human_decision" {% if filters.route == 'needs_human_decision' %}selected{% endif %}>Needs Human Decision</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="review_state" onchange="this.form.submit()">
+          <option value="">Review: Any</option>
+          <option value="not_reviewed" {% if filters.review_state == 'not_reviewed' %}selected{% endif %}>Not reviewed</option>
+          <option value="reviewed" {% if filters.review_state == 'reviewed' %}selected{% endif %}>Reviewed</option>
+          <option value="needs_review" {% if filters.review_state == 'needs_review' %}selected{% endif %}>Needs review</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="transcript_status" onchange="this.form.submit()">
+          <option value="">Transcript: Any</option>
+          <option value="transcript_usable" {% if filters.transcript_status == 'transcript_usable' %}selected{% endif %}>Usable</option>
+          <option value="transcript_pending" {% if filters.transcript_status == 'transcript_pending' %}selected{% endif %}>Pending</option>
+          <option value="recorded_but_no_usable_text" {% if filters.transcript_status == 'recorded_but_no_usable_text' %}selected{% endif %}>Recorded, no speech</option>
+          <option value="no_recording" {% if filters.transcript_status == 'no_recording' %}selected{% endif %}>No recording</option>
+          <option value="call_no_transcript" {% if filters.transcript_status == 'call_no_transcript' %}selected{% endif %}>Call, no transcript</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+
+      {% if filters.source_type or filters.rep_email or filters.route or filters.review_state or filters.transcript_status %}
+      <a href="/records" class="btn-clear">✕ Clear filters</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if records %}
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ref</th>
+            <th>Source</th>
+            <th>Person</th>
+            <th>Title / Call Context</th>
+            <th>Duration</th>
+            <th>Transcript</th>
+            <th>Routes</th>
+            <th>Review</th>
+            <th>DQ</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in records %}
+          <tr>
+            <td><strong style="color:var(--text-main);">{{ r.record_ref }}</strong></td>
+            <td>
+              {% if r.source_type == 'call' %}
+                <span class="badge badge-call">Call</span>
+              {% else %}
+                <span class="badge badge-meeting">Meeting</span>
+              {% endif %}
+            </td>
+            <td>
+              <div style="font-weight:500;">{{ r.rep_name }}</div>
+              <div style="font-size:0.72rem;color:var(--text-secondary);">{{ r.rep_email }}</div>
+            </td>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.title }}">
+              {{ r.title }}
+            </td>
+            <td style="color:var(--text-secondary);font-size:0.8rem;">{{ r.duration_str }}</td>
+            <td>
+              {% if r.transcript_status == 'transcript_usable' %}
+                <span class="badge badge-usable"><span class="badge-dot"></span>Usable</span>
+              {% elif r.transcript_status == 'transcript_pending' %}
+                <span class="badge badge-pending"><span class="badge-dot"></span>Pending</span>
+              {% elif r.transcript_status == 'recorded_but_no_usable_text' %}
+                <span class="badge badge-recorded"><span class="badge-dot"></span>Recorded</span>
+              {% elif r.transcript_status == 'no_recording' %}
+                <span class="badge badge-no-transcript"><span class="badge-dot"></span>None</span>
+              {% else %}
+                <span class="badge badge-no-transcript">{{ r.transcript_status }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                {% for route in r.effective_routes %}
+                  {% if route == 'customer_follow_up' %}<span class="badge route-cfu">CFU</span>
+                  {% elif route == 'deal_next_steps' %}<span class="badge route-dns">DNS</span>
+                  {% elif route == 'sales_coaching' %}<span class="badge route-sc">SC</span>
+                  {% elif route == 'support_account_admin' %}<span class="badge route-saa">SAA</span>
+                  {% elif route == 'internal_vendor_note' %}<span class="badge route-ivn">IVN</span>
+                  {% elif route == 'needs_human_decision' %}<span class="badge route-nhd">NHD</span>
+                  {% endif %}
+                {% endfor %}
+                {% if r.route_origin == 'manual' %}
+                  <span class="badge badge-manual">Manual</span>
+                {% endif %}
+              </div>
+            </td>
+            <td>
+              {% if r.review_state == 'reviewed' %}
+                <span class="badge badge-reviewed">✓ Done</span>
+              {% elif r.review_state == 'needs_review' %}
+                <span class="badge badge-needs-review">⚠ Review</span>
+              {% else %}
+                <span style="color:var(--text-3);font-size:0.75rem;">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if r.dq_flags %}
+                <span class="badge badge-dq" title="{{ r.dq_flags|join(', ') }}">⚠ {{ r.dq_flags|length }}</span>
+              {% else %}
+                <span style="color:var(--text-3);font-size:0.75rem;">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="/record/{{ r.source_type }}/{{ r.source_id }}" class="btn btn-ghost" style="padding:4px 12px;font-size:0.75rem;">Open →</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:-6px;">
+    Route codes: <strong>CFU</strong> = Customer Follow-Up · <strong>DNS</strong> = Deal Next Steps · <strong>SC</strong> = Sales Coaching ·
+    <strong>SAA</strong> = Support / Admin · <strong>IVN</strong> = Internal / Vendor · <strong>NHD</strong> = Needs Human Decision
+  </div>
+
+  {% else %}
+  <div class="card" style="text-align:center;padding:48px 24px;">
+    <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+    <h3 style="font-size:1.1rem;font-weight:600;">No records match your filters</h3>
+    <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;">
+      <a href="/records" style="color:var(--accent);">Clear all filters</a> to see all 44 interactions.
+    </p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

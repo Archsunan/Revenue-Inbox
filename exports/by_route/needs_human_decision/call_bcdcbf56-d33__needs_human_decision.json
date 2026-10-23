@@ -1,0 +1,27 @@
+{
+  "source_type": "call",
+  "source_id": "bcdcbf56-d338-5c78-9a97-42c2fc1c9931",
+  "record_ref": "C04",
+  "route": "needs_human_decision",
+  "generated_from_revision": 1,
+  "summary": "Call to Lanternpath Media handled by an automated call screener. Rep Arun left a voicemail for Ritesh regarding previous expense software discussion and a corrected email address.",
+  "evidence": [
+    {
+      "label": "Automated screener",
+      "quote": "Please record your name and the purpose of your call so the recipient can decide whether to answer."
+    },
+    {
+      "label": "Screener outcome",
+      "quote": "The person you called is unavailable. You may leave a further message after the signal."
+    },
+    {
+      "label": "Rep voicemail context",
+      "quote": "My understanding is that our information first went to the wrong email address."
+    }
+  ],
+  "not_established": "Whether Ritesh reviewed the resent proposal. Stored 'speaker_count: 2' counted the automated screener system as a speaker.",
+  "next_step": {
+    "action": "Check email delivery metrics and wait for prospect reply before next dial.",
+    "owner": null
+  }
+}

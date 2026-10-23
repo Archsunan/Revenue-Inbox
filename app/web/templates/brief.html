@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Manager Brief — 21 Aug 2026{% endblock %}
+
+{% block content %}
+<div class="center-content">
+  <!-- Header Area -->
+  <div class="header-area">
+    <div class="greeting-text">
+      <h2>Manager Brief</h2>
+      <p>Executive synthesis for {{ date_label }} across all 18 verified conversations.</p>
+    </div>
+    <div class="header-actions">
+      <div class="date-pill">
+        <span>Coverage: <strong>{{ total_usable }}/44</strong> usable</span>
+      </div>
+      <button class="circle-icon-btn" onclick="triggerExport()" title="Export Brief and Manifest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Highlights strip card -->
+  <div class="card" style="background:var(--surface-muted);border:1px solid var(--border);padding:18px 22px;">
+    <div style="font-size:0.75rem;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;">Executive Overview</div>
+    <div style="font-size:1.15rem;font-weight:600;margin-top:4px;">
+      <span style="color:var(--green-text);">{{ total_usable }} conversations</span>
+      <span style="color:var(--text-secondary);font-weight:400;"> have usable conversation text (post-update batch).</span>
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:4px;line-height:1.5;">
+      Remaining 26 records represent short dials/voicemails (B01–B20) or silent recordings (M05, M08, M11) and appear with full intake state in the Inbox.
+    </p>
+  </div>
+
+  {% if brief_items %}
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    {% for item in brief_items %}
+    <div class="card">
+      <div class="card-header-row" style="margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge {% if item.source_type == 'call' %}badge-call{% else %}badge-meeting{% endif %}">{{ item.source_type|capitalize }}</span>
+          <strong style="font-size:0.95rem;">{{ item.record_ref }}</strong>
+          <span style="color:var(--text-secondary);font-size:0.85rem;">{{ item.title }}</span>
+        </div>
+        <a href="/record/{{ item.source_type }}/{{ item.source_id }}" class="btn btn-ghost" style="font-size:0.75rem;padding:3px 12px;">Open record →</a>
+      </div>
+
+      <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:12px;">
+        Participant: {{ item.rep_name }}
+      </div>
+
+      {% if item.analyses %}
+        {% for a in item.analyses %}
+        <div style="background:var(--surface-muted);border:1px solid var(--border-light);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+          <div style="margin-bottom:6px;">
+            {% if a.route == 'customer_follow_up' %}<span class="badge route-cfu">Customer Follow-Up</span>
+            {% elif a.route == 'deal_next_steps' %}<span class="badge route-dns">Deal Next Steps</span>
+            {% elif a.route == 'sales_coaching' %}<span class="badge route-sc">Sales Coaching</span>
+            {% elif a.route == 'support_account_admin' %}<span class="badge route-saa">Support / Admin</span>
+            {% elif a.route == 'internal_vendor_note' %}<span class="badge route-ivn">Internal / Vendor</span>
+            {% else %}<span class="badge">{{ a.route }}</span>{% endif %}
+          </div>
+          <div style="font-size:0.85rem;color:var(--text-main);margin-bottom:8px;line-height:1.45;">{{ a.summary }}</div>
+          
+          {% if a.evidence %}
+          <div style="margin-bottom:8px;">
+            {% for ev in a.evidence[:2] %}
+            <div class="evidence-item" style="background:#FFFFFF;">
+              <div class="evidence-label">{{ ev.label or 'Evidence citation' }}</div>
+              {% if ev.quote %}<div class="evidence-quote">"{{ ev.quote }}"</div>{% endif %}
+              {% if ev.turn_number %}
+                <a href="/record/{{ item.source_type }}/{{ item.source_id }}#turn-{{ ev.turn_number }}"
+                   style="font-size:0.72rem;color:var(--accent);font-weight:500;">→ Jump to turn {{ ev.turn_number }}</a>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if a.next_step %}
+          <div style="font-size:0.8rem;color:#1E3A8A;background:#EFF6FF;border-radius:8px;padding:6px 12px;">
+            <strong>Next step:</strong>
+            {% if a.next_step is mapping %}
+              {{ a.next_step.action or '—' }}
+              {% if a.next_step.owner %}<span style="color:var(--text-secondary);"> (Owner: {{ a.next_step.owner }})</span>{% endif %}
+            {% else %}
+              {{ a.next_step }}
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="color:var(--text-secondary);font-size:0.82rem;">No pre-generated analysis for this record.</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card" style="text-align:center;padding:48px 24px;">
+    <p style="color:var(--text-secondary);">No usable conversations loaded. Run <code>python -m app demo-load</code></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{
+  "source_type": "call",
+  "source_id": "428817fa-7e9e-5418-a7d4-bb396d28dfbf",
+  "record_ref": "C07",
+  "route": "support_account_admin",
+  "generated_from_revision": 1,
+  "summary": "Outreach call by Dev to Aditya at Willowbank Advisory regarding partnering to offer virtual business accounts to newly incorporated companies. Aditya agreed to review proposal over messaging app and take a call on Monday.",
+  "evidence": [
+    {
+      "label": "Partnership inquiry",
+      "quote": "We'd like to partner with advisory firms such as yours so your clients can access a virtual business account after incorporation."
+    },
+    {
+      "label": "Delivery channel",
+      "quote": "Sorry, could you message me on our chat app and send whatever proposal you have?"
+    },
+    {
+      "label": "Follow-up agreement",
+      "quote": "Once you've received them, could I call on Monday to see whether you'd like to discuss it further? Yes, that's fine."
+    }
+  ],
+  "not_established": "Client incorporation volumes, revenue share terms, or regulatory jurisdictions supported.",
+  "next_step": {
+    "action": "Send partnership proposal over messaging app and follow up by phone on Monday.",
+    "owner": "Dev"
+  }
+}

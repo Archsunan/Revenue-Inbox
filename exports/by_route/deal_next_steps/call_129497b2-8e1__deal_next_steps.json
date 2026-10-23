@@ -1,0 +1,27 @@
+{
+  "source_type": "call",
+  "source_id": "129497b2-8e1d-5e01-919c-e8a852b5ff68",
+  "record_ref": "C08",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Cold introduction by Meera to Raghav regarding expense software. Raghav noted a frontline/people operations colleague deals with location processes and offered their email for a proposal.",
+  "evidence": [
+    {
+      "label": "Internal referral",
+      "quote": "The colleague handling our people operations also deals with frontline processes and the locations."
+    },
+    {
+      "label": "Referral permission",
+      "quote": "If you send him a proposal and say you spoke with me, he can take a look."
+    },
+    {
+      "label": "Email destination",
+      "quote": "It's contact08@example.com."
+    }
+  ],
+  "not_established": "Specific pain points, software currently in use, or budget.",
+  "next_step": {
+    "action": "Send tailored proposal to contact08@example.com referencing discussion with Mr Raghav.",
+    "owner": "Meera"
+  }
+}

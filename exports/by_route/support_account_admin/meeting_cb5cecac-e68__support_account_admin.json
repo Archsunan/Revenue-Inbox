@@ -1,0 +1,23 @@
+{
+  "source_type": "meeting",
+  "source_id": "cb5cecac-e68d-52b7-b10b-b0c748efc467",
+  "record_ref": "M01",
+  "route": "support_account_admin",
+  "generated_from_revision": 1,
+  "summary": "Clarified business verification and KYC prerequisites for registered corporate entities versus personal individual accounts.",
+  "evidence": [
+    {
+      "label": "Registered business restriction",
+      "turn_number": 2
+    },
+    {
+      "label": "Account opening requirements discussion",
+      "turn_number": 8
+    }
+  ],
+  "not_established": "Specific banking partner licenses or overseas jurisdiction support.",
+  "next_step": {
+    "action": "Provide written documentation on entity verification guidelines.",
+    "owner": "Team member A"
+  }
+}

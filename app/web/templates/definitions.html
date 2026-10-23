@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Definitions & Limitations — Revenue Intelligence Inbox{% endblock %}
+
+{% block content %}
+<div class="center-content">
+  <!-- Header Area -->
+  <div class="header-area">
+    <div class="greeting-text">
+      <h2>Definitions & Limitations</h2>
+      <p>Data contracts, metric specifications, intake states, and operational boundaries.</p>
+    </div>
+    <div class="header-actions">
+      <div class="date-pill">
+        <span>21 Aug 2026 · Asia/Kolkata</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-header-row">
+      <h3 class="card-title">Metric Definitions</h3>
+      <span class="card-subtitle">Exact denominator discipline</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>Numerator</th><th>Denominator</th><th>Period</th><th>Missing-data effect</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Total Records</strong></td>
+            <td>All unique records in DB</td>
+            <td>44 (30 calls + 14 meetings)</td>
+            <td>21 Aug 2026 IST</td>
+            <td>Filters reduce this count. Ingestion guarantees 44 records invariant.</td>
+          </tr>
+          <tr>
+            <td><strong>Usable Transcripts</strong></td>
+            <td>transcript_status = transcript_usable</td>
+            <td>44 total (filtered denominator)</td>
+            <td>21 Aug 2026 IST</td>
+            <td>17/44 initially; 18/44 after M07 late delivery update.</td>
+          </tr>
+          <tr>
+            <td><strong>Usable Calls</strong></td>
+            <td>Calls with usable conversation text</td>
+            <td>30 calls</td>
+            <td>21 Aug 2026 IST</td>
+            <td>20 calls (B01–B20) are short dials with no speech.</td>
+          </tr>
+          <tr>
+            <td><strong>Usable Meetings</strong></td>
+            <td>Meetings with verified speech turns</td>
+            <td>14 meetings</td>
+            <td>21 Aug 2026 IST</td>
+            <td>6 meetings have no usable transcript (silent or unscheduled).</td>
+          </tr>
+          <tr>
+            <td><strong>Duration</strong></td>
+            <td>duration_seconds from payload</td>
+            <td>—</td>
+            <td>—</td>
+            <td>Wall-clock duration in seconds. Note B13 data anomaly (talk time > duration).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-header-row">
+      <h3 class="card-title">Transcript Intake States</h3>
+      <span class="card-subtitle">5 distinct statuses</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-usable"><span class="badge-dot"></span>transcript_usable</span></td><td>At least one turn with verified text. Available for routing and analysis.</td></tr>
+          <tr><td><span class="badge badge-pending"><span class="badge-dot"></span>transcript_pending</span></td><td>No turns in initial batch; source notes a later delivery. Arrives in update batch (M07).</td></tr>
+          <tr><td><span class="badge badge-recorded"><span class="badge-dot"></span>recorded_but_no_usable_text</span></td><td>Recording exists but no speech was captured (M05, M08, M11). <strong>Does not mean meeting did not occur.</strong></td></tr>
+          <tr><td><span class="badge badge-no-transcript"><span class="badge-dot"></span>no_recording</span></td><td>No notetaker was scheduled or notetaker was cancelled before start (M12, M13, M14).</td></tr>
+          <tr><td><span class="badge badge-no-transcript"><span class="badge-dot"></span>call_no_transcript</span></td><td>Call occurred (duration > 0) but no transcript text was captured (B01–B20).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-grid" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header-row">
+        <h3 class="card-title">Identity & Conflict Rules</h3>
+      </div>
+      <ul style="font-size:0.83rem;color:var(--text-main);line-height:1.7;padding-left:18px;">
+        <li><strong>Primary Key:</strong> Composite key <code>(source_type, source_id)</code> everywhere.</li>
+        <li><strong>Display Labels:</strong> <code>record_ref</code> (B01, C01, M01) is purely an envelope label.</li>
+        <li><strong>Precedence Rule:</strong> Higher batch revision wins (rev 2 overwrites rev 1). Equal or older batches never overwrite.</li>
+        <li><strong>Same-Revision Diff:</strong> Diff on same revision produces a logged warning, not an overwrite.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header-row">
+        <h3 class="card-title">Known Limitations</h3>
+      </div>
+      <ul style="font-size:0.83rem;color:var(--text-main);line-height:1.7;padding-left:18px;">
+        <li>All 44 interactions fall on a single local date (21 August 2026 IST). Multi-day trending requires larger batches.</li>
+        <li>No pipeline revenue totals or win probabilities are fabricated without CRM contract feeds.</li>
+        <li>Pre-generated analyses are point-in-time snapshots; updated transcripts raise a stale flag.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{
+  "source_type": "call",
+  "source_id": "2ec4404c-beee-5377-a63c-aab701da08ed",
+  "record_ref": "C01",
+  "route": "needs_human_decision",
+  "generated_from_revision": 1,
+  "summary": "Cold outreach to Pranav regarding Harborlight Advisory. Prospect expressed strong dissatisfaction at being contacted without opt-in and stated finance operations are already automated.",
+  "evidence": [
+    {
+      "label": "Prospect refusal",
+      "quote": "I don't know how I ended up on your list. I didn't ask for this call, and I'm not interested."
+    },
+    {
+      "label": "Existing automation",
+      "quote": "Our processes are already very automated. We have a fairly advanced setup, so I don't think this is something we need."
+    }
+  ],
+  "not_established": "Whether Harborlight Advisory has other decision makers or if contact was removed from list.",
+  "next_step": {
+    "action": "Verify list acquisition origin and mark Pranav as do-not-contact.",
+    "owner": null
+  }
+}

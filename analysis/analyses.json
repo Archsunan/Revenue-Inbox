@@ -1,0 +1,615 @@
+[
+  {
+    "source_type": "call",
+    "source_id": "2ec4404c-beee-5377-a63c-aab701da08ed",
+    "record_ref": "C01",
+    "route": "needs_human_decision",
+    "generated_from_revision": 1,
+    "summary": "Cold outreach to Pranav regarding Harborlight Advisory. Prospect expressed strong dissatisfaction at being contacted without opt-in and stated finance operations are already automated.",
+    "evidence": [
+      {
+        "label": "Prospect refusal",
+        "quote": "I don't know how I ended up on your list. I didn't ask for this call, and I'm not interested."
+      },
+      {
+        "label": "Existing automation",
+        "quote": "Our processes are already very automated. We have a fairly advanced setup, so I don't think this is something we need."
+      }
+    ],
+    "not_established": "Whether Harborlight Advisory has other decision makers or if contact was removed from list.",
+    "next_step": {
+      "action": "Verify list acquisition origin and mark Pranav as do-not-contact.",
+      "owner": null
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "4b870624-8aad-5315-a60e-0db95981cf99",
+    "record_ref": "C02",
+    "route": "needs_human_decision",
+    "generated_from_revision": 1,
+    "summary": "Call to Fernhaven Group answered by receptionist Kavya. Target contact Leela was out of office; rep transferred to voicemail.",
+    "evidence": [
+      {
+        "label": "Gatekeeper response",
+        "quote": "It looks as though she isn't in the office today. Would you like to leave a message with me, or would you prefer her voicemail?"
+      },
+      {
+        "label": "Rep routing choice",
+        "quote": "Her voicemail would be fine, thank you."
+      }
+    ],
+    "not_established": "Whether Leela listened to the voicemail or will call back. Stored 'is_conversation: true' is misleading for a gatekeeper interaction.",
+    "next_step": {
+      "action": "Log gatekeeper touchpoint and re-attempt contact next week.",
+      "owner": null
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "20d509ba-d589-5334-9aef-ea4ce6105b1a",
+    "record_ref": "C03",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Follow-up call by Kiran to Milan regarding API developer access and event notifications. Milan was travelling outdoors on roaming with poor audio quality; expressed price sensitivity and suggested connecting by email or early next week.",
+    "evidence": [
+      {
+        "label": "Price sensitivity",
+        "quote": "We did ask about some developer functionality, but it isn't essential enough for us to spend much on it."
+      },
+      {
+        "label": "Next conversation window",
+        "quote": "Send the email and we can speak Monday or Tuesday."
+      }
+    ],
+    "not_established": "Specific budget amount, exact team size, or firm purchase commitment.",
+    "next_step": {
+      "action": "Send follow-up email titled 'Developer access and event notifications — follow-up' and call back Monday.",
+      "owner": "Kiran"
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "bcdcbf56-d338-5c78-9a97-42c2fc1c9931",
+    "record_ref": "C04",
+    "route": "needs_human_decision",
+    "generated_from_revision": 1,
+    "summary": "Call to Lanternpath Media handled by an automated call screener. Rep Arun left a voicemail for Ritesh regarding previous expense software discussion and a corrected email address.",
+    "evidence": [
+      {
+        "label": "Automated screener",
+        "quote": "Please record your name and the purpose of your call so the recipient can decide whether to answer."
+      },
+      {
+        "label": "Screener outcome",
+        "quote": "The person you called is unavailable. You may leave a further message after the signal."
+      },
+      {
+        "label": "Rep voicemail context",
+        "quote": "My understanding is that our information first went to the wrong email address."
+      }
+    ],
+    "not_established": "Whether Ritesh reviewed the resent proposal. Stored 'speaker_count: 2' counted the automated screener system as a speaker.",
+    "next_step": {
+      "action": "Check email delivery metrics and wait for prospect reply before next dial.",
+      "owner": null
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "75a6b94f-7717-5cfb-9e41-0acc94415e17",
+    "record_ref": "C05",
+    "route": "needs_human_decision",
+    "generated_from_revision": 1,
+    "summary": "Cold sales call by Meera offering store expense and vendor management software. Prospect indicated they already use StoreHarbor and other internal tools, but agreed to receive a presentation via email.",
+    "evidence": [
+      {
+        "label": "Proposal request",
+        "quote": "What I suggest is that you send me your presentation. If we ever decide to change the providers we already have, we could consider it then."
+      },
+      {
+        "label": "Email confirmation",
+        "quote": "I have an email address noted down; may I confirm contact05@example.com?"
+      }
+    ],
+    "not_established": "Active buying intent, dissatisfaction with current providers, or budget.",
+    "next_step": {
+      "action": "Send standard product overview deck to contact05@example.com.",
+      "owner": "Meera"
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "12216d5c-e254-52c6-b344-47de4c6e1ae5",
+    "record_ref": "C06",
+    "route": "sales_coaching",
+    "generated_from_revision": 1,
+    "summary": "Cold outreach by Ravi to Nikhil regarding store expenses for retail/distribution business (>120 stores). Prospect explained their essential processes are already automated and managed centrally by head office; declined further discussion.",
+    "evidence": [
+      {
+        "label": "Current automation status",
+        "quote": "We have quite a lot of automation, with a mixed model where needed."
+      },
+      {
+        "label": "Central governance",
+        "quote": "Head office manages it, and we have full visibility. That is why I said the arrangements are already in place."
+      }
+    ],
+    "not_established": "Specific vendor platforms used, renewal dates, or departmental dissatisfaction.",
+    "next_step": {
+      "action": "Log account notes noting high automation and central head-office management; do not pursue immediate follow-up.",
+      "owner": null
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "428817fa-7e9e-5418-a7d4-bb396d28dfbf",
+    "record_ref": "C07",
+    "route": "support_account_admin",
+    "generated_from_revision": 1,
+    "summary": "Outreach call by Dev to Aditya at Willowbank Advisory regarding partnering to offer virtual business accounts to newly incorporated companies. Aditya agreed to review proposal over messaging app and take a call on Monday.",
+    "evidence": [
+      {
+        "label": "Partnership inquiry",
+        "quote": "We'd like to partner with advisory firms such as yours so your clients can access a virtual business account after incorporation."
+      },
+      {
+        "label": "Delivery channel",
+        "quote": "Sorry, could you message me on our chat app and send whatever proposal you have?"
+      },
+      {
+        "label": "Follow-up agreement",
+        "quote": "Once you've received them, could I call on Monday to see whether you'd like to discuss it further? Yes, that's fine."
+      }
+    ],
+    "not_established": "Client incorporation volumes, revenue share terms, or regulatory jurisdictions supported.",
+    "next_step": {
+      "action": "Send partnership proposal over messaging app and follow up by phone on Monday.",
+      "owner": "Dev"
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "129497b2-8e1d-5e01-919c-e8a852b5ff68",
+    "record_ref": "C08",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Cold introduction by Meera to Raghav regarding expense software. Raghav noted a frontline/people operations colleague deals with location processes and offered their email for a proposal.",
+    "evidence": [
+      {
+        "label": "Internal referral",
+        "quote": "The colleague handling our people operations also deals with frontline processes and the locations."
+      },
+      {
+        "label": "Referral permission",
+        "quote": "If you send him a proposal and say you spoke with me, he can take a look."
+      },
+      {
+        "label": "Email destination",
+        "quote": "It's contact08@example.com."
+      }
+    ],
+    "not_established": "Specific pain points, software currently in use, or budget.",
+    "next_step": {
+      "action": "Send tailored proposal to contact08@example.com referencing discussion with Mr Raghav.",
+      "owner": "Meera"
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "4a1de681-f884-55e8-b1ad-de22d17cd959",
+    "record_ref": "C09",
+    "route": "needs_human_decision",
+    "generated_from_revision": 1,
+    "summary": "Cold call by Meera to Vedant (>130 store chain). Vedant explained software was developed internally and referred rep to business head Mr Rishabh on professional network, but requested his own name not be mentioned.",
+    "evidence": [
+      {
+        "label": "Internal system in place",
+        "quote": "We have developed our own software internally, so at present we aren't looking for anything outside the organisation."
+      },
+      {
+        "label": "Referral to business head",
+        "quote": "If you want to speak to somebody about it, you can find our business head, Mr Rishabh, on a professional networking site."
+      },
+      {
+        "label": "Name usage constraint",
+        "quote": "No, please don't use my name."
+      }
+    ],
+    "not_established": "Whether Mr Rishabh has identified gaps in the internal software or is open to external vendors.",
+    "next_step": {
+      "action": "Conduct outreach to Mr Rishabh without referencing Vedant.",
+      "owner": null
+    }
+  },
+  {
+    "source_type": "call",
+    "source_id": "b747f592-810e-583c-9b81-8db5ab035806",
+    "record_ref": "C10",
+    "route": "customer_follow_up",
+    "generated_from_revision": 1,
+    "summary": "Cold call by Meera to Aniket inquiring about Meadowbrick. Aniket stated he left Meadowbrick and now works in manufacturing; agreed to receive a brief on messaging app but declined a scheduled follow-up call.",
+    "evidence": [
+      {
+        "label": "Job change",
+        "quote": "Are you calling about Meadowbrick? Yes, that's right. I don't work there anymore."
+      },
+      {
+        "label": "Brief request",
+        "quote": "send an explanation of what you do. I will get back to you."
+      },
+      {
+        "label": "Refusal of scheduled follow-up",
+        "quote": "No. I said I will contact you if there is anything to discuss."
+      }
+    ],
+    "not_established": "Current company name, role/title, or purchasing authority at new manufacturing employer.",
+    "next_step": {
+      "action": "Send product overview brief via messaging app; do not schedule unsolicited outbound call.",
+      "owner": "Meera"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "cb5cecac-e68d-52b7-b10b-b0c748efc467",
+    "record_ref": "M01",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Partnership exploration meeting with Harborpath Advisory on remote corporate bank account opening. Partner A expressed interest in offering client accounts and suggested co-marketing/podcasts.",
+    "evidence": [
+      {
+        "label": "Core inquiry",
+        "turn_number": 1
+      },
+      {
+        "label": "Business eligibility boundary",
+        "turn_number": 2
+      },
+      {
+        "label": "Co-marketing initiative",
+        "turn_number": 26
+      },
+      {
+        "label": "Agreed follow-up",
+        "turn_number": 28
+      }
+    ],
+    "not_established": "Client referral volume, compliance onboarding timeline, or commercial rev-share agreements.",
+    "next_step": {
+      "action": "Send partner information pack and connect Partner A with marketing regarding podcast and client spotlight.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "cb5cecac-e68d-52b7-b10b-b0c748efc467",
+    "record_ref": "M01",
+    "route": "support_account_admin",
+    "generated_from_revision": 1,
+    "summary": "Clarified business verification and KYC prerequisites for registered corporate entities versus personal individual accounts.",
+    "evidence": [
+      {
+        "label": "Registered business restriction",
+        "turn_number": 2
+      },
+      {
+        "label": "Account opening requirements discussion",
+        "turn_number": 8
+      }
+    ],
+    "not_established": "Specific banking partner licenses or overseas jurisdiction support.",
+    "next_step": {
+      "action": "Provide written documentation on entity verification guidelines.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "1a21c409-c050-5787-90af-2667e057e1b6",
+    "record_ref": "M02",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Partnership and technical integration review with Supplier A covering electronic invoicing, payment templates, and vendor evaluation criteria.",
+    "evidence": [
+      {
+        "label": "Initial partnership scope",
+        "turn_number": 1
+      },
+      {
+        "label": "Electronic invoicing priority",
+        "turn_number": 3
+      },
+      {
+        "label": "Formal evaluation criteria",
+        "turn_number": 34
+      },
+      {
+        "label": "Next meeting arrangement",
+        "turn_number": 35
+      }
+    ],
+    "not_established": "Commercial contract pricing, SLA terms, or formal partnership sign-off.",
+    "next_step": {
+      "action": "Supplier A to send the integration/evaluation template shortly.",
+      "owner": "Supplier A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "1a21c409-c050-5787-90af-2667e057e1b6",
+    "record_ref": "M02",
+    "route": "customer_follow_up",
+    "generated_from_revision": 1,
+    "summary": "Scheduled follow-up call after completing the vendor integration template to review product fit and commercial alignment.",
+    "evidence": [
+      {
+        "label": "Template review call",
+        "turn_number": 35
+      },
+      {
+        "label": "Template delivery commitment",
+        "turn_number": 36
+      }
+    ],
+    "not_established": "Confirmed date and time for the follow-up meeting.",
+    "next_step": {
+      "action": "Complete vendor template upon receipt and hold explanation call.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "398672e7-62dd-5afd-846d-0237d49792fb",
+    "record_ref": "M03",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Solution presentation to Asterloom Systems covering corporate cards, employee expense reimbursement, and accounting integration for 65 employees.",
+    "evidence": [
+      {
+        "label": "Finance team evaluation",
+        "turn_number": 1
+      },
+      {
+        "label": "Product scope: cards and reimbursements",
+        "turn_number": 2
+      },
+      {
+        "label": "Company scale and budget priority",
+        "turn_number": 34
+      },
+      {
+        "label": "Proposal request",
+        "turn_number": 35
+      },
+      {
+        "label": "CFO internal review condition",
+        "turn_number": 36
+      }
+    ],
+    "not_established": "CFO approval, decision date, or agreed card limits.",
+    "next_step": {
+      "action": "Send cards proposal and module information to Customer B.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "b0f79b3d-37ba-52f9-b2bc-58b159dd6d91",
+    "record_ref": "M04",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Migration planning discussion with Cedarwave Distribution regarding physical cards, contactless acceptance issues, wallet payments, and department user management.",
+    "evidence": [
+      {
+        "label": "Migration agenda",
+        "turn_number": 1
+      },
+      {
+        "label": "Card acceptance difficulties",
+        "turn_number": 2
+      },
+      {
+        "label": "Digital wallet expectations",
+        "turn_number": 3
+      },
+      {
+        "label": "Department reconciliation issue",
+        "turn_number": 30
+      }
+    ],
+    "not_established": "Exact card reissue migration date or accounting software version.",
+    "next_step": {
+      "action": "Customer A to review migration requirements and follow up with team.",
+      "owner": "Customer A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "b0f79b3d-37ba-52f9-b2bc-58b159dd6d91",
+    "record_ref": "M04",
+    "route": "support_account_admin",
+    "generated_from_revision": 1,
+    "summary": "Customer reported database issue where users cannot be moved between departments from standard assistant view, breaking accounting reconciliation.",
+    "evidence": [
+      {
+        "label": "Department setup error",
+        "turn_number": 30
+      },
+      {
+        "label": "Technical support session requirement",
+        "turn_number": 31
+      }
+    ],
+    "not_established": "Resolution timeline or root cause of database permission restriction.",
+    "next_step": {
+      "action": "Arrange session with technical support to review database user department records.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "657b9e9d-9472-5b01-a127-a648ad7e8cf7",
+    "record_ref": "M06",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Exploratory finance discussion with Mapletrail Services branch (50 people) covering branch expenditure, card controls, security, and audit trails.",
+    "evidence": [
+      {
+        "label": "Branch operations scope",
+        "turn_number": 2
+      },
+      {
+        "label": "Confidentiality and audit concerns",
+        "turn_number": 31
+      },
+      {
+        "label": "Compliance controls explanation",
+        "turn_number": 32
+      },
+      {
+        "label": "Information request",
+        "turn_number": 33
+      }
+    ],
+    "not_established": "Head office buy-in, formal RFP issuance, or total branch budget.",
+    "next_step": {
+      "action": "Send security documentation and platform overview to Customer A.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "4f304fff-fd40-5cfc-a366-0a134c445c2a",
+    "record_ref": "M07",
+    "route": "sales_coaching",
+    "generated_from_revision": 2,
+    "summary": "Technical support and screen-share session with Willowfield Trust reviewing transaction editing bugs, balance refresh glitches, and receipt attachment workarounds.",
+    "evidence": [
+      {
+        "label": "Description update failure",
+        "turn_number": 2
+      },
+      {
+        "label": "Bug reproduction confirmation",
+        "turn_number": 3
+      },
+      {
+        "label": "Balance display refresh bug",
+        "turn_number": 25
+      },
+      {
+        "label": "Workaround and pending fixes",
+        "turn_number": 26
+      }
+    ],
+    "not_established": "Release schedule for platform bug fix.",
+    "next_step": {
+      "action": "Send reproduction sequence to engineering team, get confirmation, and report back to customer.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "4b5b9192-f3fc-505a-8e77-4d2ffaa54594",
+    "record_ref": "M09",
+    "route": "support_account_admin",
+    "generated_from_revision": 1,
+    "summary": "Account setup troubleshooting covering expired invite tokens for Brookmint Holdings, accounting reconciliation for Northkite Equipment, and separate email identities.",
+    "evidence": [
+      {
+        "label": "Expired invitation token",
+        "turn_number": 1
+      },
+      {
+        "label": "Dual account setup scope",
+        "turn_number": 2
+      },
+      {
+        "label": "Token engineering check commitment",
+        "turn_number": 31
+      },
+      {
+        "label": "Customer IT follow-up",
+        "turn_number": 32
+      }
+    ],
+    "not_established": "Whether Brookmint and Northkite share backend legal entity tax IDs.",
+    "next_step": {
+      "action": "Check expired-token problem with engineering and respond by tomorrow afternoon.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "4b5b9192-f3fc-505a-8e77-4d2ffaa54594",
+    "record_ref": "M09",
+    "route": "deal_next_steps",
+    "generated_from_revision": 1,
+    "summary": "Onboarding continuation for Brookmint Holdings and Northkite Equipment once login issues and email identity segregation are addressed.",
+    "evidence": [
+      {
+        "label": "Setup resumption",
+        "turn_number": 1
+      },
+      {
+        "label": "Training videos review",
+        "turn_number": 30
+      }
+    ],
+    "not_established": "Target go-live date for transaction processing.",
+    "next_step": {
+      "action": "Customer A to review onboarding videos before scheduling next walkthrough session.",
+      "owner": "Customer A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "337f297d-9385-5b82-9e54-5019c1ed912c",
+    "record_ref": "M10",
+    "route": "support_account_admin",
+    "generated_from_revision": 1,
+    "summary": "Internal training walkthrough on billing workflows, subscription lifecycles, account freeze triggers, and operations invoice clearance.",
+    "evidence": [
+      {
+        "label": "Training agenda",
+        "turn_number": 3
+      },
+      {
+        "label": "Account unfreeze process",
+        "turn_number": 18
+      },
+      {
+        "label": "Back-office access request",
+        "turn_number": 20
+      }
+    ],
+    "not_established": "Customer-facing communication or pricing discounts.",
+    "next_step": {
+      "action": "Request back-office system access for the next training session.",
+      "owner": "Team member A"
+    }
+  },
+  {
+    "source_type": "meeting",
+    "source_id": "337f297d-9385-5b82-9e54-5019c1ed912c",
+    "record_ref": "M10",
+    "route": "internal_vendor_note",
+    "generated_from_revision": 1,
+    "summary": "Internal operational procedure documentation: frozen customer accounts require operations team clearance of outstanding invoices before unfreezing.",
+    "evidence": [
+      {
+        "label": "Operations freeze procedure",
+        "turn_number": 18
+      },
+      {
+        "label": "Internal note documentation",
+        "turn_number": 20
+      }
+    ],
+    "not_established": "Exceptions to standard credit policy.",
+    "next_step": {
+      "action": "Add unresolved questions to internal team notes.",
+      "owner": null
+    }
+  }
+]

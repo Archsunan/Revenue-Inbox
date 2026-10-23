@@ -1,0 +1,23 @@
+{
+  "source_type": "call",
+  "source_id": "20d509ba-d589-5334-9aef-ea4ce6105b1a",
+  "record_ref": "C03",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Follow-up call by Kiran to Milan regarding API developer access and event notifications. Milan was travelling outdoors on roaming with poor audio quality; expressed price sensitivity and suggested connecting by email or early next week.",
+  "evidence": [
+    {
+      "label": "Price sensitivity",
+      "quote": "We did ask about some developer functionality, but it isn't essential enough for us to spend much on it."
+    },
+    {
+      "label": "Next conversation window",
+      "quote": "Send the email and we can speak Monday or Tuesday."
+    }
+  ],
+  "not_established": "Specific budget amount, exact team size, or firm purchase commitment.",
+  "next_step": {
+    "action": "Send follow-up email titled 'Developer access and event notifications — follow-up' and call back Monday.",
+    "owner": "Kiran"
+  }
+}

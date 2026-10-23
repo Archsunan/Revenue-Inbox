@@ -1,0 +1,23 @@
+{
+  "source_type": "meeting",
+  "source_id": "337f297d-9385-5b82-9e54-5019c1ed912c",
+  "record_ref": "M10",
+  "route": "internal_vendor_note",
+  "generated_from_revision": 1,
+  "summary": "Internal operational procedure documentation: frozen customer accounts require operations team clearance of outstanding invoices before unfreezing.",
+  "evidence": [
+    {
+      "label": "Operations freeze procedure",
+      "turn_number": 18
+    },
+    {
+      "label": "Internal note documentation",
+      "turn_number": 20
+    }
+  ],
+  "not_established": "Exceptions to standard credit policy.",
+  "next_step": {
+    "action": "Add unresolved questions to internal team notes.",
+    "owner": null
+  }
+}

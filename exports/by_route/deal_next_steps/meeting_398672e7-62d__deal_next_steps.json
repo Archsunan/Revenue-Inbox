@@ -1,0 +1,35 @@
+{
+  "source_type": "meeting",
+  "source_id": "398672e7-62dd-5afd-846d-0237d49792fb",
+  "record_ref": "M03",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Solution presentation to Asterloom Systems covering corporate cards, employee expense reimbursement, and accounting integration for 65 employees.",
+  "evidence": [
+    {
+      "label": "Finance team evaluation",
+      "turn_number": 1
+    },
+    {
+      "label": "Product scope: cards and reimbursements",
+      "turn_number": 2
+    },
+    {
+      "label": "Company scale and budget priority",
+      "turn_number": 34
+    },
+    {
+      "label": "Proposal request",
+      "turn_number": 35
+    },
+    {
+      "label": "CFO internal review condition",
+      "turn_number": 36
+    }
+  ],
+  "not_established": "CFO approval, decision date, or agreed card limits.",
+  "next_step": {
+    "action": "Send cards proposal and module information to Customer B.",
+    "owner": "Team member A"
+  }
+}

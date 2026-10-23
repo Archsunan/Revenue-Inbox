@@ -1,0 +1,23 @@
+{
+  "source_type": "call",
+  "source_id": "12216d5c-e254-52c6-b344-47de4c6e1ae5",
+  "record_ref": "C06",
+  "route": "sales_coaching",
+  "generated_from_revision": 1,
+  "summary": "Cold outreach by Ravi to Nikhil regarding store expenses for retail/distribution business (>120 stores). Prospect explained their essential processes are already automated and managed centrally by head office; declined further discussion.",
+  "evidence": [
+    {
+      "label": "Current automation status",
+      "quote": "We have quite a lot of automation, with a mixed model where needed."
+    },
+    {
+      "label": "Central governance",
+      "quote": "Head office manages it, and we have full visibility. That is why I said the arrangements are already in place."
+    }
+  ],
+  "not_established": "Specific vendor platforms used, renewal dates, or departmental dissatisfaction.",
+  "next_step": {
+    "action": "Log account notes noting high automation and central head-office management; do not pursue immediate follow-up.",
+    "owner": null
+  }
+}

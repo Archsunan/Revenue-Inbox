@@ -1,0 +1,31 @@
+{
+  "source_type": "meeting",
+  "source_id": "cb5cecac-e68d-52b7-b10b-b0c748efc467",
+  "record_ref": "M01",
+  "route": "deal_next_steps",
+  "generated_from_revision": 1,
+  "summary": "Partnership exploration meeting with Harborpath Advisory on remote corporate bank account opening. Partner A expressed interest in offering client accounts and suggested co-marketing/podcasts.",
+  "evidence": [
+    {
+      "label": "Core inquiry",
+      "turn_number": 1
+    },
+    {
+      "label": "Business eligibility boundary",
+      "turn_number": 2
+    },
+    {
+      "label": "Co-marketing initiative",
+      "turn_number": 26
+    },
+    {
+      "label": "Agreed follow-up",
+      "turn_number": 28
+    }
+  ],
+  "not_established": "Client referral volume, compliance onboarding timeline, or commercial rev-share agreements.",
+  "next_step": {
+    "action": "Send partner information pack and connect Partner A with marketing regarding podcast and client spotlight.",
+    "owner": "Team member A"
+  }
+}

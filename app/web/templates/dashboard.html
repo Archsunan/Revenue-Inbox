@@ -1,0 +1,545 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Revenue Intelligence Inbox{% endblock %}
+
+{% block content %}
+{% if error is defined %}
+<div class="center-content">
+  <div style="background:var(--red-soft);border:1px solid #FECDD3;border-radius:var(--radius);padding:18px;margin-bottom:20px;">
+    <strong style="color:var(--red-text);">⚠ Error loading dashboard:</strong> {{ error }}
+    <br><small style="color:var(--text-secondary);">Run <code>python -m app demo-load</code> to load data first.</small>
+  </div>
+</div>
+{% else %}
+
+<!-- CENTER CONTENT -->
+<div class="center-content">
+  <!-- Greeting Header -->
+  <div class="header-area">
+    <div class="greeting-text">
+      <h2>Hello, Manager</h2>
+      <p>Track revenue inbox progress here.</p>
+    </div>
+    <div class="header-actions">
+      <div class="date-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--text-secondary);">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>21 Aug 2026 · Asia/Kolkata</span>
+      </div>
+      <button class="circle-icon-btn" title="Calendar settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters: Small rounded-pill dropdowns with light gray (#F4F5F7) background -->
+  <form method="get" action="/">
+    <div class="filter-bar">
+      <div class="filter-pill">
+        <select name="source_type" onchange="this.form.submit()">
+          <option value="">All source types</option>
+          <option value="call" {% if filters.source_type == 'call' %}selected{% endif %}>Calls (30)</option>
+          <option value="meeting" {% if filters.source_type == 'meeting' %}selected{% endif %}>Meetings (14)</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="rep_email" onchange="this.form.submit()">
+          <option value="">All call reps</option>
+          {% for email, name in call_reps.items() %}
+          <option value="{{ email }}" {% if filters.rep_email == email %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <div class="filter-pill">
+        <select name="route" onchange="this.form.submit()">
+          <option value="">All routes</option>
+          <option value="customer_follow_up" {% if filters.route == 'customer_follow_up' %}selected{% endif %}>Customer Follow-Up</option>
+          <option value="deal_next_steps" {% if filters.route == 'deal_next_steps' %}selected{% endif %}>Deal Next Steps</option>
+          <option value="sales_coaching" {% if filters.route == 'sales_coaching' %}selected{% endif %}>Sales Coaching</option>
+          <option value="support_account_admin" {% if filters.route == 'support_account_admin' %}selected{% endif %}>Support / Account Admin</option>
+          <option value="internal_vendor_note" {% if filters.route == 'internal_vendor_note' %}selected{% endif %}>Internal / Vendor Note</option>
+          <option value="needs_human_decision" {% if filters.route == 'needs_human_decision' %}selected{% endif %}>Needs Human Decision</option>
+        </select>
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      {% if filters.source_type or filters.rep_email or filters.route %}
+      <a href="/" class="btn-clear">✕ Clear filters</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- KPI Strip: ONE horizontal strip with thin top/bottom divider lines and vertical dividers (Requirement 3) -->
+  <div class="kpi-strip">
+    <!-- Total Records -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">Total records</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Total Records</strong><br>
+              Total count in DB for 21 Aug 2026. Denominator is 44 (30 calls + 14 meetings).
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ total }}</span>
+          <span class="kpi-delta gray">{{ calls }}c · {{ meetings }}m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usable Transcripts -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green);">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">Usable transcripts</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Usable Transcripts</strong><br>
+              Records with verified conversation text. 17 initially, 18 after M07 update batch.
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ usable }}</span>
+          <span class="kpi-delta green">▲ {{ (usable/total*100)|round(1) if total > 0 else 0 }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stale Analyses -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">Stale analyses</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Stale Analyses</strong><br>
+              Records where transcript updated after analysis was generated.
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ stale_count }}</span>
+          <span class="kpi-delta {% if stale_count > 0 %}red{% else %}gray{% endif %}">{{ stale_count }} stale</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Needs Review -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color:var(--orange);">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">Needs review</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Needs Review</strong><br>
+              Records requiring manager assessment (e.g. late transcript arrivals or flagged conflicts).
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ needs_review }}</span>
+          <span class="kpi-delta {% if needs_review > 0 %}orange{% else %}gray{% endif %}">{{ needs_review }} action</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DQ Flags -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">DQ flags</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Data Quality Flags</strong><br>
+              Anomalies detected: talk_time > duration, inconsistent prior connects, or automated screeners.
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ dq_affected }}</span>
+          <span class="kpi-delta {% if dq_affected > 0 %}red{% else %}gray{% endif %}">{{ dq_affected }} items</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Label Conflicts -->
+    <div class="kpi-item">
+      <div class="kpi-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </div>
+      <div class="kpi-data">
+        <div class="kpi-label-row">
+          <span class="kpi-label">Label conflicts</span>
+          <div class="popover-wrap">
+            <button class="info-icon-btn" aria-label="Info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </button>
+            <div class="popover-box">
+              <strong>Label Conflicts</strong><br>
+              Contradictions between recorded telephony tags and actual transcript intent (e.g. C02, C04).
+            </div>
+          </div>
+        </div>
+        <div class="kpi-num-row">
+          <span class="kpi-num">{{ label_conflicts }}</span>
+          <span class="kpi-delta gray">3 documented</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts & Breakdown Section (Requirement 4) -->
+  <div class="section-grid">
+    <!-- Transcript Coverage Breakdown (Clean List) -->
+    <div class="card">
+      <div class="card-header-row">
+        <div class="card-title-group">
+          <h3 class="card-title">Transcript coverage</h3>
+          <span class="card-subtitle">Done {{ (usable/total*100)|round|int if total > 0 else 0 }}%</span>
+        </div>
+        <button class="circle-icon-btn" title="View options">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+        </button>
+      </div>
+
+      <div class="coverage-list">
+        {% for status, count in status_counts.items() %}
+        <div class="coverage-row">
+          <div class="coverage-left">
+            {% if status == 'transcript_usable' %}
+              <span class="badge badge-usable"><span class="badge-dot"></span>Usable</span>
+            {% elif status == 'transcript_pending' %}
+              <span class="badge badge-pending"><span class="badge-dot"></span>Pending</span>
+            {% elif status == 'recorded_but_no_usable_text' %}
+              <span class="badge badge-recorded"><span class="badge-dot"></span>Recorded, no text</span>
+            {% elif status == 'no_recording' %}
+              <span class="badge badge-no-transcript"><span class="badge-dot"></span>No recording</span>
+            {% elif status == 'call_no_transcript' %}
+              <span class="badge badge-no-transcript"><span class="badge-dot"></span>Call, no text</span>
+            {% else %}
+              <span class="badge">{{ status }}</span>
+            {% endif %}
+            <span class="coverage-note">
+              {% if status == 'transcript_usable' %}Full conversation turns available
+              {% elif status == 'recorded_but_no_usable_text' %}Empty audio / silent bridge
+              {% elif status == 'no_recording' %}Notetaker cancelled or not scheduled
+              {% elif status == 'transcript_pending' %}Late delivery — update batch
+              {% elif status == 'call_no_transcript' %}Short call without speech turns
+              {% endif %}
+            </span>
+          </div>
+          <div class="coverage-right">
+            <span class="coverage-count">{{ count }}</span>
+            <button class="row-menu-btn" title="Details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+            </button>
+          </div>
+        </div>
+        {% else %}
+        <p style="color:var(--text-secondary);font-size:0.85rem;padding:12px 0;">No records loaded.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Route Distribution (Smooth Area Visual & Clean Progress Bars) -->
+    <div class="card">
+      <div class="card-header-row">
+        <div class="card-title-group">
+          <h3 class="card-title">Route distribution</h3>
+          <span class="card-subtitle">6 active routes</span>
+        </div>
+        <div class="filter-pill" style="font-size:0.75rem;">
+          <select style="padding:4px 26px 4px 12px;font-size:0.75rem;">
+            <option>21 Aug 2026</option>
+            <option>All batches</option>
+          </select>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="right:8px;width:12px;height:12px;">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="route-chart-container">
+        <!-- Smooth Area Curve Chart -->
+        <div class="chart-tooltip-wrap">
+          <svg class="area-chart-svg" viewBox="0 0 400 120" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8EC5F5" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#8EC5F5" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <!-- Horizontal Dashed Gridlines -->
+            <line x1="0" y1="30" x2="400" y2="30" stroke="#F0F0F3" stroke-dasharray="4,4" stroke-width="1"/>
+            <line x1="0" y1="65" x2="400" y2="65" stroke="#F0F0F3" stroke-dasharray="4,4" stroke-width="1"/>
+            <line x1="0" y1="100" x2="400" y2="100" stroke="#F0F0F3" stroke-dasharray="4,4" stroke-width="1"/>
+            
+            <!-- Area fill path -->
+            <path d="M 0 95 C 60 70, 100 25, 160 35 C 220 45, 270 85, 330 40 C 365 20, 385 45, 400 30 L 400 120 L 0 120 Z" fill="url(#areaGradient)"/>
+            <!-- Main smooth curve (light blue) -->
+            <path d="M 0 95 C 60 70, 100 25, 160 35 C 220 45, 270 85, 330 40 C 365 20, 385 45, 400 30" fill="none" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Secondary trend line (soft orange) -->
+            <path d="M 0 105 C 70 95, 120 75, 180 70 C 240 65, 290 50, 340 55 C 370 58, 390 50, 400 48" fill="none" stroke="#F5A25D" stroke-width="1.8" stroke-dasharray="3,3" stroke-linecap="round"/>
+
+            <!-- Active Data Point & Tooltip on peak -->
+            <circle cx="160" cy="35" r="4.5" fill="#FFFFFF" stroke="#3B82F6" stroke-width="2.5"/>
+          </svg>
+        </div>
+
+        <!-- Route Breakdown Horizontal Bars -->
+        <div class="chart-bars-list">
+          {% for route, count in route_counts.items()|sort(attribute='1', reverse=True) %}
+          <div class="chart-bar-item">
+            <div class="chart-bar-header">
+              <span>
+                {% if route == 'customer_follow_up' %}<span class="badge route-cfu">Customer Follow-Up</span>
+                {% elif route == 'deal_next_steps' %}<span class="badge route-dns">Deal Next Steps</span>
+                {% elif route == 'sales_coaching' %}<span class="badge route-sc">Sales Coaching</span>
+                {% elif route == 'support_account_admin' %}<span class="badge route-saa">Support / Admin</span>
+                {% elif route == 'internal_vendor_note' %}<span class="badge route-ivn">Internal / Vendor</span>
+                {% elif route == 'needs_human_decision' %}<span class="badge route-nhd">Needs Human Decision</span>
+                {% else %}<span class="badge">{{ route }}</span>{% endif %}
+              </span>
+              <strong style="color:var(--text-main);font-size:0.8rem;">{{ count }} records</strong>
+            </div>
+            <div class="chart-bar-bg">
+              <div class="chart-bar-fill {% if route == 'customer_follow_up' %}route-cfu{% elif route == 'deal_next_steps' %}route-dns{% elif route == 'sales_coaching' %}route-sc{% elif route == 'support_account_admin' %}route-saa{% elif route == 'internal_vendor_note' %}route-ivn{% else %}route-nhd{% endif %}"
+                   style="width:{{ (count / total * 100)|round|int if total > 0 else 0 }}%;background:currentColor;"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- People Section (Call Representatives & Meeting Organisers) -->
+  <div class="section-grid">
+    <div class="card">
+      <div class="card-header-row">
+        <h3 class="card-title">Call representatives</h3>
+        <span class="card-subtitle">{{ call_reps|length }} reps</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rep Name</th><th>Email address</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for email, name in call_reps.items() %}
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;">
+                    {{ name[:2]|upper }}
+                  </div>
+                  <strong>{{ name }}</strong>
+                </div>
+              </td>
+              <td style="color:var(--text-secondary);font-size:0.78rem;">{{ email }}</td>
+              <td><a href="/records?rep_email={{ email }}" class="btn btn-ghost" style="padding:3px 12px;font-size:0.75rem;">View calls →</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" style="color:var(--text-secondary);">No call reps found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header-row">
+        <h3 class="card-title">Meeting organisers</h3>
+        <span class="card-subtitle">{{ meeting_organisers|length }} organisers</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Organiser Name</th><th>Email address</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for email, name in meeting_organisers.items() %}
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:#F3E8FF;color:#7C3AED;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;">
+                    {{ name[:2]|upper }}
+                  </div>
+                  <strong>{{ name }}</strong>
+                </div>
+              </td>
+              <td style="color:var(--text-secondary);font-size:0.78rem;">{{ email }}</td>
+              <td><a href="/records?source_type=meeting&rep_email={{ email }}" class="btn btn-ghost" style="padding:3px 12px;font-size:0.75rem;">View mtgs →</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" style="color:var(--text-secondary);">No meeting organisers found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Import Runs -->
+  <div class="card" style="margin-bottom:8px;">
+    <div class="card-header-row">
+      <h3 class="card-title">Batch import history</h3>
+      <span class="card-subtitle">Idempotent log</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Run ID</th><th>Batch ID</th><th>Revision</th><th>Inserted</th>
+            <th>Updated</th><th>Unchanged</th><th>Skipped</th><th>Warnings</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for run in import_runs %}
+          <tr>
+            <td style="color:var(--text-secondary);font-size:0.75rem;">#{{ run.id }}</td>
+            <td><strong>{{ run.batch_id }}</strong></td>
+            <td>rev {{ run.batch_revision }}</td>
+            <td><span class="badge badge-usable">{{ run.inserted }}</span></td>
+            <td><span class="badge" style="background:#EFF6FF;color:#1D4ED8;">{{ run.updated }}</span></td>
+            <td style="color:var(--text-secondary);">{{ run.unchanged }}</td>
+            <td>{{ run.skipped_older }}</td>
+            <td>
+              {% set warns = run.warnings_json|default('[]') %}
+              {% if warns and warns != '[]' %}
+              <span class="badge badge-dq">⚠ {{ warns|length }}</span>
+              {% else %}
+              <span style="color:var(--text-secondary);">None</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="8" style="color:var(--text-secondary);">No import runs yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL (~310px, Requirement 2) -->
+<aside class="right-panel">
+  <!-- Activity Feed -->
+  <div class="activity-feed-section">
+    <h4 class="activity-feed-header">Inbox Activity</h4>
+
+    <!-- Item 1: C04 -->
+    <div class="activity-item">
+      <div class="activity-avatar" style="background:#FEE2E2;color:#B91C1C;">DQ</div>
+      <div class="activity-body">
+        <div class="activity-meta">
+          <strong>C04 Telephony Conflict</strong> · 10:42 AM
+        </div>
+        <div class="activity-bubble">
+          Automated screener bot counted as human speaker 2 on Lanternpath Media. Routed to needs_human_decision.
+        </div>
+        <a href="/record/call/024caffc-d16e-5843-b325-682dbc8d448e" class="activity-link">Review call C04 →</a>
+      </div>
+    </div>
+
+    <!-- Item 2: M07 -->
+    <div class="activity-item">
+      <div class="activity-avatar" style="background:#FEF3C7;color:#92400E;">UP</div>
+      <div class="activity-body">
+        <div class="activity-meta">
+          <strong>M07 Late Delivery</strong> · 09:15 AM
+        </div>
+        <div class="activity-attachment">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--accent);">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+            <polyline points="13 2 13 9 20 9"></polyline>
+          </svg>
+          <span>Willowfield Trust (rev 2)</span>
+        </div>
+        <a href="/record/meeting/944e908d-fbf1-5e58-941e-35e69e4693a0" class="activity-link">View 27 turns attached →</a>
+      </div>
+    </div>
+
+    <!-- Item 3: C02 -->
+    <div class="activity-item">
+      <div class="activity-avatar" style="background:#EFF6FF;color:#1D4ED8;">GK</div>
+      <div class="activity-body">
+        <div class="activity-meta">
+          <strong>C02 Gatekeeper Interaction</strong> · 08:30 AM
+        </div>
+        <div class="activity-bubble" style="background:#F8FAFC;border-color:#E2E8F0;color:#334155;">
+          Fernhaven Group receptionist Kavya answered. Contact out of office; transferred to voicemail.
+        </div>
+        <a href="/record/call/3d74c0c2-55ce-586b-a567-961a8684ad70" class="activity-link">View record C02 →</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+{% endif %}
+{% endblock %}

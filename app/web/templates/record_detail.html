@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block title %}{{ rec.record_ref }} — Revenue Intelligence Inbox{% endblock %}
+{% block page_title %}
+  <span class="badge {% if source_type == 'call' %}badge-call{% else %}badge-meeting{% endif %}">{{ source_type }}</span>
+  {{ rec.record_ref }}
+{% endblock %}
+
+{% block content %}
+<div class="center-content">
+  <div class="header-area" style="margin-bottom:8px;">
+    <div class="greeting-text">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a href="/records" class="btn btn-ghost" style="padding:4px 12px;font-size:0.75rem;">← Back to Inbox</a>
+        <h2>{{ rec.record_ref }}</h2>
+        <span class="badge {% if source_type == 'call' %}badge-call{% else %}badge-meeting{% endif %}" style="font-size:0.8rem;">{{ source_type|capitalize }}</span>
+      </div>
+      <p style="margin-top:4px;">{{ payload.title or payload.rep_name or 'Interaction detail' }} · 21 Aug 2026</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openCorrectionModal('{{ source_type }}', '{{ source_id }}', {{ effective_routes|tojson }})">
+        ✏️ Correct Route
+      </button>
+    </div>
+  </div>
+
+  <div class="sections-grid" style="margin-bottom:20px;">
+
+  <!-- Metadata card -->
+  <div class="card">
+    <div class="card-title">Metadata</div>
+    <table>
+      <tbody>
+        <tr><td class="dim" style="width:40%">source_type</td><td><code>{{ source_type }}</code></td></tr>
+        <tr><td class="dim">source_id</td><td><code class="mono" style="font-size:.72rem;word-break:break-all;">{{ source_id }}</code></td></tr>
+        <tr><td class="dim">record_ref</td><td><code>{{ rec.record_ref }}</code></td></tr>
+        <tr><td class="dim">batch_revision</td><td>{{ rec.batch_revision }}</td></tr>
+        <tr><td class="dim">local_date_ist</td><td>{{ rec.local_date_ist }}</td></tr>
+        <tr><td class="dim">transcript_status</td>
+          <td>
+            {% if rec.transcript_status == 'transcript_usable' %}<span class="badge badge-usable">transcript_usable</span>
+            {% elif rec.transcript_status == 'transcript_pending' %}<span class="badge badge-pending">transcript_pending</span>
+            {% elif rec.transcript_status == 'recorded_but_no_usable_text' %}<span class="badge badge-recorded">recorded_but_no_usable_text</span>
+            {% elif rec.transcript_status == 'no_recording' %}<span class="badge badge-no-transcript">no_recording</span>
+            {% elif rec.transcript_status == 'call_no_transcript' %}<span class="badge badge-no-transcript">call_no_transcript</span>
+            {% else %}<span class="badge">{{ rec.transcript_status }}</span>{% endif %}
+          </td>
+        </tr>
+        <tr><td class="dim">review_state</td>
+          <td>
+            {% if review_state == 'reviewed' %}<span class="badge badge-reviewed">reviewed</span>
+            {% elif review_state == 'needs_review' %}<span class="badge badge-needs-review">needs_review</span>
+            {% else %}<span class="dim">not_reviewed</span>{% endif %}
+          </td>
+        </tr>
+        {% if source_type == 'call' %}
+        <tr><td class="dim">Duration</td><td>{{ dur_str }} <span class="dim">({{ payload.duration_seconds }}s)</span></td></tr>
+        <tr><td class="dim">Talk time</td><td>{{ talk_str }} <span class="dim">({{ payload.talk_time_seconds }}s)</span></td></tr>
+        <tr><td class="dim">Rep email</td><td class="mono">{{ payload.rep_email or '—' }}</td></tr>
+        <tr><td class="dim">Rep name</td><td>{{ payload.rep_name or '—' }}</td></tr>
+        {% if payload.rep_user_id is none %}<tr><td class="dim">rep_user_id</td><td class="text-yellow">null — identified by email only</td></tr>{% endif %}
+        <tr><td class="dim">Call type</td><td>{{ payload.call_type or '—' }}</td></tr>
+        <tr><td class="dim">Prior connects</td><td>{{ payload.prior_connects_ever }}</td></tr>
+        {% else %}
+        <tr><td class="dim">Title</td><td>{{ payload.title or '—' }}</td></tr>
+        <tr><td class="dim">Organiser</td><td>{{ payload.organizer_name or '—' }} <span class="mono dim" style="font-size:.72rem;">{{ payload.organizer_email or '' }}</span></td></tr>
+        <tr><td class="dim">Meeting type</td><td>{{ payload.meeting_type or '—' }}</td></tr>
+        <tr><td class="dim">Notetaker status</td><td>{{ payload.notetaker_status or '—' }}</td></tr>
+        <tr><td class="dim">Summary status</td><td>{{ payload.summary_status or '—' }}</td></tr>
+        <tr><td class="dim">Attendee count</td><td>{{ payload.attendee_count or '—' }}</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Route Assignment card -->
+  <div class="card">
+    <div class="card-title">Route Assignment</div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.75rem;color:var(--text-3);margin-bottom:6px;">EFFECTIVE ROUTES
+        <span class="badge {% if route_origin == 'manual' %}badge-manual{% else %}badge-suggested{% endif %}" style="margin-left:6px;">{{ route_origin }}</span>
+      </div>
+      <div class="tag-list">
+        {% for r in effective_routes %}
+          {% if r == 'customer_follow_up' %}<span class="badge route-cfu">Customer Follow-Up</span>
+          {% elif r == 'deal_next_steps' %}<span class="badge route-dns">Deal Next Steps</span>
+          {% elif r == 'sales_coaching' %}<span class="badge route-sc">Sales Coaching</span>
+          {% elif r == 'support_account_admin' %}<span class="badge route-saa">Support / Admin</span>
+          {% elif r == 'internal_vendor_note' %}<span class="badge route-ivn">Internal / Vendor</span>
+          {% elif r == 'needs_human_decision' %}<span class="badge route-nhd">Needs Human Decision</span>
+          {% else %}<span class="badge">{{ r }}</span>{% endif %}
+        {% else %}
+          <span class="dim">No routes assigned</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if ra and ra.suggested_reason %}
+    <div style="font-size:.78rem;color:var(--text-2);margin-bottom:10px;">
+      <strong>Reason:</strong> {{ ra.suggested_reason }}
+    </div>
+    {% endif %}
+    {% if ra and ra.suggested_confidence %}
+    <div style="font-size:.75rem;color:var(--text-3);margin-bottom:12px;">
+      Confidence: <strong style="color:var(--text);">{{ ra.suggested_confidence }}</strong>
+    </div>
+    {% endif %}
+    {% if ra and ra.suggested_triggers %}
+    <div style="font-size:.75rem;color:var(--text-3);margin-bottom:12px;">
+      Trigger signals:
+      {% set triggers = ra.suggested_triggers | from_json %}
+      {% for t in triggers %}<code>{{ t }}</code> {% endfor %}
+    </div>
+    {% endif %}
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+      <button class="btn btn-primary" style="font-size:.78rem;"
+        onclick="openCorrectionModal('{{ source_type }}', '{{ source_id }}', {{ effective_routes|tojson }})">
+        ✏️ Correct Routes
+      </button>
+      {% if manual_routes %}
+      <button class="btn btn-ghost" style="font-size:.78rem;"
+        onclick="resetManualRoute('{{ source_type }}', '{{ source_id }}')">
+        ↩ Reset to Suggested
+      </button>
+      {% endif %}
+    </div>
+
+    {% if manual_routes and ra %}
+    <div style="margin-top:10px;font-size:.75rem;color:var(--text-3);">
+      Manual set at {{ ra.manual_set_at or '—' }}
+      {% if ra.manual_reason %} · "{{ ra.manual_reason }}"{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Data Quality Flags -->
+{% if dq_flags %}
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-title">⚠ Data-Quality Flags</div>
+  <ul class="dq-list">
+    {% for flag in dq_flags %}
+    <li class="dq-item">
+      <span class="dq-icon">⚠</span>
+      <div>
+        <div style="font-weight:600;font-size:.78rem;color:var(--red);margin-bottom:2px;">{{ flag.flag_key }}</div>
+        <div style="font-size:.78rem;">{{ flag.description }}</div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- Transcript -->
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-title">
+    Transcript
+    {% if turns %}<span style="font-weight:400;color:var(--text-3);">({{ turns|length }} turns · 1-based position)</span>{% endif %}
+  </div>
+
+  {% if tr and tr.unavailable_reason %}
+  <div class="conflict-box">
+    <div class="conflict-label">No usable transcript</div>
+    {{ tr.unavailable_reason }}
+  </div>
+  {% endif %}
+
+  {% if turns %}
+  <div class="transcript-wrap">
+    {% for turn in turns %}
+    <div class="turn" id="turn-{{ turn.turn_number }}">
+      <div class="turn-num">{{ turn.turn_number }}</div>
+      <div class="turn-body">
+        <div class="turn-speaker">{{ turn.speaker }}</div>
+        <div class="turn-text">{{ turn.text }}</div>
+        {% if turn.timecode %}<div class="turn-time">⏱ {{ turn.timecode }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% elif rec.transcript_status == 'transcript_usable' %}
+  <div class="dim" style="font-size:.83rem;">Transcript text available but no structured turns.</div>
+  {% else %}
+  <div class="dim" style="font-size:.83rem;">
+    {% if rec.transcript_status == 'recorded_but_no_usable_text' %}
+      🎙 Recording exists but no usable speech was captured. This does not mean the meeting didn't happen.
+    {% elif rec.transcript_status == 'no_recording' %}
+      — No recording. Notetaker may have been cancelled, not scheduled, or meeting was not recorded.
+    {% elif rec.transcript_status == 'call_no_transcript' %}
+      — Call occurred but no transcript turns were included in this delivery.
+    {% elif rec.transcript_status == 'transcript_pending' %}
+      ⏳ Transcript pending late delivery. Check if update batch has been imported.
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- Analysis -->
+{% if analyses %}
+<div style="margin-bottom:20px;">
+  <div class="section-title">Pre-Generated Analysis</div>
+  {% for a in analyses %}
+  <div class="analysis-card">
+    <div class="analysis-header">
+      <div class="analysis-route">
+        {% if a.route == 'customer_follow_up' %}<span class="badge route-cfu">Customer Follow-Up</span>
+        {% elif a.route == 'deal_next_steps' %}<span class="badge route-dns">Deal Next Steps</span>
+        {% elif a.route == 'sales_coaching' %}<span class="badge route-sc">Sales Coaching</span>
+        {% elif a.route == 'support_account_admin' %}<span class="badge route-saa">Support / Admin</span>
+        {% elif a.route == 'internal_vendor_note' %}<span class="badge route-ivn">Internal / Vendor</span>
+        {% elif a.route == 'needs_human_decision' %}<span class="badge route-nhd">Needs Human Decision</span>
+        {% else %}<span class="badge">{{ a.route }}</span>{% endif %}
+        <span style="font-size:.75rem;color:var(--text-3);margin-left:8px;">{{ a.origin }} · rev {{ a.generated_from_revision }}</span>
+      </div>
+      {% if a.stale %}<span class="stale-badge">⚠ STALE — transcript updated</span>{% endif %}
+    </div>
+
+    <div style="font-size:.85rem;color:var(--text);margin-bottom:12px;">{{ a.summary }}</div>
+
+    {% if a.evidence %}
+    <div style="margin-bottom:10px;">
+      {% for ev in a.evidence %}
+      <div class="evidence-item">
+        <div class="evidence-label">{{ ev.label or 'Evidence' }}</div>
+        {% if ev.quote %}
+        <div class="evidence-quote">"{{ ev.quote }}"</div>
+        {% endif %}
+        {% if ev.turn_number %}
+        <div>
+          <a href="#turn-{{ ev.turn_number }}" data-turn-ref="{{ ev.turn_number }}"
+             style="font-size:.75rem;color:var(--accent);">→ Jump to turn {{ ev.turn_number }}</a>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if a.not_established %}
+    <div style="font-size:.78rem;color:var(--text-3);margin-bottom:8px;">
+      <strong style="color:var(--text-2);">Not established:</strong> {{ a.not_established }}
+    </div>
+    {% endif %}
+
+    {% if a.next_step %}
+    <div style="font-size:.82rem;background:var(--surface3);border-radius:var(--radius-sm);padding:8px 12px;">
+      <strong>Next step:</strong>
+      {% if a.next_step is mapping %}
+        {{ a.next_step.action or '—' }}
+        {% if a.next_step.owner %}<span class="dim"> (Owner: {{ a.next_step.owner }})</span>{% endif %}
+      {% else %}
+        {{ a.next_step }}
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Raw JSON -->
+<div class="card" style="margin-bottom:24px;">
+  <div class="card-title" style="cursor:pointer;" onclick="toggleRaw()">▶ Raw Source Record JSON</div>
+  <pre class="raw-json-wrap" id="raw-json" style="display:none;margin-top:12px;">{{ raw_json }}</pre>
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleRaw() {
+  const el = document.getElementById('raw-json');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// Register Jinja filter for template use
+</script>
+{% endblock %}

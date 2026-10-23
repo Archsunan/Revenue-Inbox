@@ -1,0 +1,23 @@
+{
+  "source_type": "meeting",
+  "source_id": "b0f79b3d-37ba-52f9-b2bc-58b159dd6d91",
+  "record_ref": "M04",
+  "route": "support_account_admin",
+  "generated_from_revision": 1,
+  "summary": "Customer reported database issue where users cannot be moved between departments from standard assistant view, breaking accounting reconciliation.",
+  "evidence": [
+    {
+      "label": "Department setup error",
+      "turn_number": 30
+    },
+    {
+      "label": "Technical support session requirement",
+      "turn_number": 31
+    }
+  ],
+  "not_established": "Resolution timeline or root cause of database permission restriction.",
+  "next_step": {
+    "action": "Arrange session with technical support to review database user department records.",
+    "owner": "Team member A"
+  }
+}
